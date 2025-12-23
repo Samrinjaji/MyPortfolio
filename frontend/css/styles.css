@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fira Code', monospace;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body{
+    background-color: #282C33;
+    line-height: 1.6;
+    color: #e5e7eb;
+    height: 1000px;
+}
+
+.navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 3rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #2F343F;
+    border-bottom: 1px solid #3B4048;
+
+}
+
+.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.logo {
+    position: absolute;
+    left: 25px;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Kali terminal colors */
+.cmd-sudo   { color: #f8f8f2; } /* white */
+.cmd-echo   { color: #f8f8f2; } /* white */
+.cmd-cd   { color: #f8f8f2; } /* white */
+.cmd-path   { color: #8be9fd; } /* cyan */
+.cmd-string { color: #f1fa8c; } /* yellow */
+.cmd-flag   { color: #bd93f9; } /* purple */
+
+.cursor {
+    display: inline;
+    animation: blink 0.9s step-start infinite;
+}
+
+.nav-links{
+    list-style: none;
+    display: flex;
+    gap: 4rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #e5e7eb;
+    font-size: 0.95rem;
+    transition: 
+        color 0.3s ease,          /* smooth color change */
+        border-bottom 0.3s ease,  /* smooth underline appear */
+        padding-bottom 0.3s ease; /* smooth padding shift */
+}
+
+.nav-links a:hover {
+    color: #8be9fd;
+    border-bottom: 2px solid #8be9fd;
+    padding-bottom: 4px;
+}
+
+.nav-links a.active {
+    color: #8be9fd;
+    border-bottom: 2px solid #8be9fd;
+    padding-bottom: 4px;
+}
+
+/* animations */
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
