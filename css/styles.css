@@ -89,9 +89,3 @@ body{
     padding-bottom: 4px;
 }
 
-/* animations */
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
