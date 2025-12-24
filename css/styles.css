@@ -39,7 +39,7 @@ body{
 .logo {
     position: absolute;
     left: 25px;
-    font-family: 'Fira Code', monospace;
+    font-family: monospace;
     font-size: 1rem;
     font-weight: 600;
     color: #fff;
@@ -49,8 +49,6 @@ body{
 }
 
 /* Kali terminal colors */
-.cmd-sudo   { color: #f8f8f2; } /* white */
-.cmd-echo   { color: #f8f8f2; } /* white */
 .cmd-cd   { color: #f8f8f2; } /* white */
 .cmd-path   { color: #8be9fd; } /* cyan */
 .cmd-string { color: #f1fa8c; } /* yellow */
@@ -58,7 +56,12 @@ body{
 
 .cursor {
     display: inline;
-    animation: blink 0.9s step-start infinite;
+    animation: blink 0.9s steps(1) infinite;
+}
+
+/* Hide menu icon by default */
+.mobile-menu {
+    display: none;
 }
 
 .nav-links{
