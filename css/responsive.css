@@ -1,7 +1,7 @@
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .navbar {
-        padding: 1rem 1.5rem;
+        padding: 1.5rem;
     }
 
     .nav-links {
@@ -12,21 +12,25 @@
 }
 
 @media screen and (max-width: 480px) {
-    /* Slide-in nav menu for mobile */
+    .logo {
+        font-size: 0.8rem;
+        left: 15px;
+        /* terminal >_ stays visible */
+    }
+
     .nav-links {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 200px;
         height: 100vh;
-        background-color: rgba(47, 52, 63, 0.95);
-        backdrop-filter: blur(4px);
+        width: 70%;
+        background-color: #2F343F;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 2rem;
-        transition: right 0.3s ease;
-        z-index: 1000;
+        transition: right 0.3s ease-in-out;
+        z-index: 1050;
     }
 
     .nav-links.active {
@@ -47,10 +51,6 @@
         width: 28px;
         height: 28px;
     }
-    
-
-    
-
 }
 
 
