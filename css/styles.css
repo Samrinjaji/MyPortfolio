@@ -16,7 +16,6 @@ body{
     background-color: #282C33;
     line-height: 1.6;
     color: #e5e7eb;
-    height: 1000px;
 }
 
 .navbar{
@@ -58,9 +57,16 @@ body{
     animation: blink 0.9s steps(1) infinite;
 }
 
-/* Hide menu icon by default */
 .mobile-menu {
     display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.mobile-menu img {
+    width: 24px;
+    height: 24px;
 }
 
 .nav-links{

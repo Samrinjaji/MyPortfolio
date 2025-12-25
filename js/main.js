@@ -1,10 +1,12 @@
 const typewriter = document.querySelector('.typewriter');
 const cursor = document.querySelector('.cursor');
-const navLinks = document.querySelectorAll('.nav-links a');
+const navLinksItems = document.querySelectorAll('.nav-links a'); // links for typing
+
+const menuBtn = document.querySelector('.mobile-menu');
+const navLinksMenu = document.querySelector('.nav-links'); // full ul for toggle
 
 const typingSpeed = 120;
 const delayBeforeTyping = 500;
-
 let typingInterval = null;
 
 // Highlight command: paths/files/hosts in cyan, strings yellow, flags purple
@@ -35,6 +37,8 @@ function typeSingleCommand(command) {
     });
 }
 
+
+
 // Type multiple commands in sequence
 async function typeCommands(commands, repeat = false) {
     for (let cmd of commands) {
@@ -53,9 +57,9 @@ const homeCommands = ['sudo ./portfolio', 'echo "Welcome to my portfolio!"'];
 typeCommands(homeCommands, true); // repeat only for Home
 
 // Navbar click behavior
-navLinks.forEach(link => {
+navLinksItems.forEach(link => {
     link.addEventListener('click', () => {
-        navLinks.forEach(l => l.classList.remove('active'));
+        navLinksItems.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
 
         const command = link.dataset.command;
@@ -73,8 +77,23 @@ navLinks.forEach(link => {
     });
 });
 
+// Hamburger toggle
+menuBtn.addEventListener('click', () => {
+    navLinksMenu.classList.toggle('show');
+});
+
+// Close menu when a link is clicked (mobile)
+navLinksMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (navLinksMenu.classList.contains('show')) {
+            navLinksMenu.classList.remove('show');
+        }
+    });
+});
+
 // Sticky navbar scroll shadow
 const navbar = document.querySelector('.navbar');
 window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 10);
 });
+
