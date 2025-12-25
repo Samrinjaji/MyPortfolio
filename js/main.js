@@ -12,7 +12,7 @@ const terminalLogo = document.getElementById('terminal-logo');
 
 const validCommands = ['home','projects','skills','about','contact'];
 
-// -------------------- Terminal Intro Typing --------------------
+// Terminal Intro Typing 
 let i = 0;
 let j = 0;
 
@@ -45,7 +45,7 @@ function typeCommand() {
 
 typeCommand();
 
-// -------------------- Open terminal on logo click --------------------
+//  Open terminal on logo click 
 terminalLogo.addEventListener('click', openTerminal);
 
 function openTerminal() {
@@ -59,7 +59,7 @@ function openTerminal() {
     promptCommand();
 }
 
-// -------------------- Prompt for user input --------------------
+//  Prompt for user input 
 function promptCommand() {
     // Stop any previous blinking cursor
     const prevInput = document.querySelector('.terminal-input.active');
@@ -112,7 +112,7 @@ function promptCommand() {
     });
 }
 
-// -------------------- Close terminal --------------------
+// Close terminal 
 function closeTerminal() {
     terminal.style.opacity = "0";
     setTimeout(() => {
@@ -124,7 +124,7 @@ function closeTerminal() {
     }, 300);
 }
 
-// -------------------- Click outside to close --------------------
+// Click outside to close 
 document.addEventListener('click', (e) => {
   if (terminal.style.display === 'flex' && !terminal.contains(e.target) && e.target !== terminalLogo) {
     closeTerminal();
