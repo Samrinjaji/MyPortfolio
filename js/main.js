@@ -1,99 +1,132 @@
-const typewriter = document.querySelector('.typewriter');
-const cursor = document.querySelector('.cursor');
-const navLinksItems = document.querySelectorAll('.nav-links a'); // links for typing
+const commands = [
+  "> sudo ./portfolio\n",
+  "Initializing portfolio...\n",
+  "Done.\n",
+  "Welcome to Samrin's Portfolio!\n"
+];
 
-const menuBtn = document.querySelector('.mobile-menu');
-const navLinksMenu = document.querySelector('.nav-links'); // full ul for toggle
+const terminal = document.getElementById('mac-terminal');
+const terminalText = document.getElementById('terminal-text');
+const portfolio = document.getElementById('portfolio-content');
+const terminalLogo = document.getElementById('terminal-logo');
 
-const typingSpeed = 120;
-const delayBeforeTyping = 500;
-let typingInterval = null;
+const validCommands = ['home','projects','skills','about','contact'];
 
-// Highlight command: paths/files/hosts in cyan, strings yellow, flags purple
-function highlightCommand(text) {
-    return text
-        .replace(/"([^"]*)"/g, `<span class="cmd-string">"$1"</span>`)   // strings
-        .replace(/\B(-{1,2}\w+)/g, `<span class="cmd-flag">$1</span>`) // flags
-        .replace(/(\.\/[^\s]+|projects|skills\.txt|samrin\.dev)/g, `<span class="cmd-path">$1</span>`); // paths
+// -------------------- Terminal Intro Typing --------------------
+let i = 0;
+let j = 0;
+
+function typeCommand() {
+  if (i < commands.length) {
+    if (j < commands[i].length) {
+      terminalText.innerHTML += commands[i][j];
+      j++;
+      setTimeout(typeCommand, 50);
+    } else {
+      terminalText.innerHTML += "\n";
+      i++;
+      j = 0;
+      setTimeout(typeCommand, 300);
+    }
+  } else {
+    // After intro, hide terminal and show portfolio
+    setTimeout(() => {
+      terminal.style.opacity = "0";
+      setTimeout(() => {
+        terminal.style.display = "none";
+        portfolio.style.display = "block";
+        requestAnimationFrame(() => {
+          portfolio.style.opacity = "1";
+        });
+      }, 1000);
+    }, 800);
+  }
 }
 
-// Type a single command and return a Promise
-function typeSingleCommand(command) {
-    return new Promise(resolve => {
-        let i = 0;
-        typewriter.innerHTML = '';
+typeCommand();
 
-        if (typingInterval) clearInterval(typingInterval);
+// -------------------- Open terminal on logo click --------------------
+terminalLogo.addEventListener('click', openTerminal);
 
-        typingInterval = setInterval(() => {
-            const partial = command.slice(0, i + 1);
-            typewriter.innerHTML = highlightCommand(partial);
-            i++;
-            if (i === command.length) {
-                clearInterval(typingInterval);
-                resolve();
+function openTerminal() {
+    // Clear terminal and show fresh input
+    terminalText.innerHTML = ""; 
+    terminal.style.display = "flex";
+    terminal.style.opacity = "1";
+    portfolio.style.display = "none";
+
+    // Start first input line
+    promptCommand();
+}
+
+// -------------------- Prompt for user input --------------------
+function promptCommand() {
+    // Stop any previous blinking cursor
+    const prevInput = document.querySelector('.terminal-input.active');
+    if (prevInput) prevInput.classList.remove('active');
+
+    // Create new line container
+    const line = document.createElement('div');
+
+    // Add single prompt symbol
+    const prompt = document.createElement('span');
+    prompt.textContent = '> ';
+    line.appendChild(prompt);
+
+    // Add editable span for user input
+    const input = document.createElement('span');
+    input.classList.add('terminal-input', 'active'); // blinking underscore
+    input.contentEditable = true;
+    input.spellcheck = false;
+    line.appendChild(input);
+
+    // Append line to terminal and focus
+    terminalText.appendChild(line);
+    input.focus();
+
+    // Handle Enter key
+    input.addEventListener('keydown', function handler(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const command = input.innerText.trim().toLowerCase();
+
+            // Stop blinking
+            input.contentEditable = false;
+            input.classList.remove('active');
+            input.removeEventListener('keydown', handler);
+
+            if (validCommands.includes(command)) {
+                terminalText.innerHTML += `\nNavigating to ${command}...\n`;
+                closeTerminal();
+
+                // Scroll to section after terminal closes
+                setTimeout(() => {
+                    const section = document.getElementById(command);
+                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                }, 350);
+            } else {
+                terminalText.innerHTML += `\nCommand not found: ${command}\n`;
+                promptCommand(); // new line with blinking cursor
             }
-        }, typingSpeed);
+        }
     });
 }
 
-
-
-// Type multiple commands in sequence
-async function typeCommands(commands, repeat = false) {
-    for (let cmd of commands) {
-        await new Promise(r => setTimeout(r, delayBeforeTyping));
-        await typeSingleCommand(cmd);
-        await new Promise(r => setTimeout(r, 1000)); // pause before next
-    }
-
-    if (repeat) {
-        typeCommands(commands, true); // repeat only if repeat=true
-    }
+// -------------------- Close terminal --------------------
+function closeTerminal() {
+    terminal.style.opacity = "0";
+    setTimeout(() => {
+        terminal.style.display = "none";
+        portfolio.style.display = "block";
+        requestAnimationFrame(() => {
+            portfolio.style.opacity = "1";
+        });
+    }, 300);
 }
 
-// Default Home commands
-const homeCommands = ['sudo ./portfolio', 'echo "Welcome to my portfolio!"'];
-typeCommands(homeCommands, true); // repeat only for Home
-
-// Navbar click behavior
-navLinksItems.forEach(link => {
-    link.addEventListener('click', () => {
-        navLinksItems.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-
-        const command = link.dataset.command;
-
-        // Stop any current typing
-        if (typingInterval) clearInterval(typingInterval);
-
-        if (command === 'sudo ./portfolio') {
-            // Home: repeat both commands
-            typeCommands(homeCommands, true);
-        } else {
-            // Other navs: type once
-            typeCommands([command], false);
-        }
-    });
+// -------------------- Click outside to close --------------------
+document.addEventListener('click', (e) => {
+  if (terminal.style.display === 'flex' && !terminal.contains(e.target) && e.target !== terminalLogo) {
+    closeTerminal();
+  }
 });
-
-// Hamburger toggle
-menuBtn.addEventListener('click', () => {
-    navLinksMenu.classList.toggle('show');
-});
-
-// Close menu when a link is clicked (mobile)
-navLinksMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (navLinksMenu.classList.contains('show')) {
-            navLinksMenu.classList.remove('show');
-        }
-    });
-});
-
-// Sticky navbar scroll shadow
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 10);
-});
-
