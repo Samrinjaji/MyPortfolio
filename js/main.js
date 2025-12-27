@@ -23,7 +23,7 @@ function typeCommand() {
     if (j < commands[i].length) {
       terminalText.innerHTML += commands[i][j];
       j++;
-      setTimeout(typeCommand, 40);
+      setTimeout(typeCommand, 30);
     } else {
       terminalText.innerHTML += "\n";
       i++;
@@ -49,7 +49,7 @@ function typeCommand() {
       navbar.classList.add("show");
       }, 600);
 
-    }, 700);
+    }, 80);
   }
 }
 
@@ -57,6 +57,7 @@ typeCommand();
 
 // Terminal interaction
 function openTerminal() {
+  if (terminal.style.display === 'flex') return;
   // Disable page scrolling
   document.body.classList.add('terminal-open');
 
@@ -103,7 +104,7 @@ document.addEventListener('keydown', (e) => {
 
   if (e.ctrlKey && e.key === '`') {
     e.preventDefault();
-    openTerminal(false); 
+    openTerminal(); 
   }
 });
 
@@ -139,7 +140,6 @@ function promptCommand() {
         const command = input.innerText.trim().toLowerCase();
 
         if(command === "") {
-            // If empty, do nothing and keep blinking cursor
             return;
         }
 
@@ -158,23 +158,13 @@ function promptCommand() {
             }, 350);
         } else {
             terminalText.innerHTML += `\nCommand not found: ${command}\n`;
-            promptCommand(); // new line with blinking cursor
+            promptCommand();
         }
     }
 });
 
 }
 const navLinks = document.querySelectorAll('.nav-links a');
-
-navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    // Remove active from all links
-    navLinks.forEach(l => l.classList.remove('active'));
-
-    // Add active to clicked link
-    link.classList.add('active');
-  });
-});
 
 
 const sections = document.querySelectorAll('section');
@@ -194,3 +184,23 @@ window.addEventListener('scroll', () => {
     }
   });
 });
+
+const menuBtn = document.querySelector('.menu-btn');
+const navLinksContainer = document.querySelector('.nav-links');
+
+if (menuBtn && navLinksContainer) {
+  menuBtn.addEventListener('click', () => {
+    navLinksContainer.classList.toggle('show');
+  });
+}
+
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    navLinksContainer.classList.remove('show');
+  });
+});
+
+
+
+
+

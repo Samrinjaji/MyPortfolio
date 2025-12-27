@@ -18,8 +18,42 @@ body{
     color: #E3E3E3;
 }
 
+/* Glitch / Scanline overlay */
+#glitch-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* so it doesn't block clicks */
+    z-index: 0; /* behind content */
+    background: repeating-linear-gradient(
+        rgba(255,255,255,0.02) 0px,
+        rgba(255,255,255,0.02) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    animation: scanline 1.5s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+
 body.terminal-open {
     overflow: hidden; 
+}
+
+body.terminal-open #portfolio-content {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+body.terminal-open .navbar {
+  filter: blur(4px);
+  pointer-events: none;
 }
 
 /* Terminal styles  */
