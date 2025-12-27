@@ -1,45 +1,67 @@
-/*
-@media (max-width: 480px) { 
-    .typewriter{
-        display: none;
-    }
-
-    .mobile-menu {
-        display: block;
-        position: absolute;
-        right: 16px;
-    }
-
-    .logo {
-        left: 16px;
-    }
-
+@media (max-width: 480px) {
     .nav-links {
+        display: none; /* hide links by default on small screens */
         flex-direction: column;
+        background: #0b0b0b;
         position: absolute;
-        top: 33px;
-        right: 0;
-        background-color: #2F343F;
+        top: 60px;
+        left: 0;
         width: 100%;
-        text-align: center;
-        padding: 1rem 0;
-        gap: 1.2rem;
-        transition: max-height 0.3s ease, opacity 0.3s ease;
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-    }
-
-    .nav-links.show {
-        max-height: 500px;
-        opacity: 1;
     }
 
     .menu-btn {
         display: block;
-        position: absolute;
-        right: 16px;
-        top: 16px;
+    }
+
+    .menu-btn img{
+        width: 30px;
+    }
+
+    #mac-terminal {
+        width: 90%;
+        max-width: 400px;
+        height: 300px;
+    }
+
+    #portfolio-content section {
+        padding: 20px;
+        font-size: 1rem;
     }
 }
 
+@media (min-width: 481px) and (max-width: 1024px) {
+
+    /* Navbar */
+    .nav-links {
+        display: flex; /* show links horizontally */
+        flex-direction: row;
+        position: static;
+        background: none;
+        width: auto;
+    }
+
+    .menu-btn {
+        display: none; /* hide hamburger */
+    }
+
+    .nav-links li {
+        margin-left: 1rem; /* slightly smaller spacing than desktop */
+    }
+
+    .logo {
+        font-size: 1.5rem; /* scale up logo slightly */
+    }
+
+    /* Terminal */
+    #mac-terminal {
+        width: 80%;
+        max-width: 600px; /* slightly smaller than desktop */
+        height: 350px;
+    }
+
+    /* Portfolio Sections */
+    #portfolio-content section {
+        padding: 30px;
+        font-size: 1.1rem;
+    }
+}

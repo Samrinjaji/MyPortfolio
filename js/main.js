@@ -1,10 +1,4 @@
-// Terminal Intro Typing 
-const commands = [
-  "> sudo ./portfolio\n",
-  "Initializing portfolio...\n",
-  "Done.\n",
-  "Welcome to Samrin's Portfolio!\n"
-];
+/* Terminal Intro Typing Effect */
 
 const terminal = document.getElementById('mac-terminal');
 const terminalText = document.getElementById('terminal-text');
@@ -13,63 +7,105 @@ const terminalLogo = document.getElementById('terminal-logo');
 
 const validCommands = ['home','projects','skills','about','contact'];
 
-
+let introFinished = false;
 let i = 0;
 let j = 0;
 
+const commands = [
+  "> sudo ./portfolio\n",
+  "Initializing portfolio...\n",
+  "Done.\n",
+  "Welcome to Samrin's Portfolio!\n"
+];
 
 function typeCommand() {
   if (i < commands.length) {
     if (j < commands[i].length) {
       terminalText.innerHTML += commands[i][j];
       j++;
-      setTimeout(typeCommand, 50);
+      setTimeout(typeCommand, 40);
     } else {
       terminalText.innerHTML += "\n";
       i++;
       j = 0;
-      setTimeout(typeCommand, 300);
+      setTimeout(typeCommand, 200);
     }
   } else {
-  setTimeout(() => {
-    // fade terminal out
-    terminal.style.transition = "opacity 0.6s ease";
-    terminal.style.opacity = "0";
-
+    introFinished = true; // mark intro finished
     setTimeout(() => {
+      terminal.style.transition = "opacity 0.6s ease";
+      terminal.style.opacity = "0";
+
+      setTimeout(() => {
       terminal.style.display = "none";
 
-      // prepare portfolio
+      // Show portfolio content
       portfolio.style.display = "block";
-
-      // force reflow so animation always runs
-      portfolio.offsetHeight;
-
-      // trigger smooth reveal
+      portfolio.offsetHeight; // force reflow
       portfolio.classList.add("show");
 
-    }, 600);
-  }, 700);
-}
+      // Show navbar
+      const navbar = document.querySelector('.navbar');
+      navbar.classList.add("show");
+      }, 600);
 
+    }, 700);
+  }
 }
 
 typeCommand();
 
-//  Open terminal on logo click 
-terminalLogo.addEventListener('click', openTerminal);
-
+// Terminal interaction
 function openTerminal() {
+  // Disable page scrolling
+  document.body.classList.add('terminal-open');
+
   terminalText.innerHTML = "";
   terminal.style.display = "flex";
   terminal.style.opacity = "1";
 
-  portfolio.classList.remove("show");
-  portfolio.style.display = "none";
-
   promptCommand();
 }
 
+// Open terminal via logo
+terminalLogo.addEventListener('click', () => {
+  openTerminal(); // no hiding of portfolio
+});
+
+function closeTerminal() {
+  // Re-enable page scrolling
+  document.body.classList.remove('terminal-open');
+
+  terminal.style.opacity = "0";
+  setTimeout(() => {
+    terminal.style.display = "none";
+    portfolio.classList.add("show");
+  }, 300);
+}
+
+// Listen globally for Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && terminal.style.display === 'flex') {
+    closeTerminal();
+  }
+});
+
+// Click outside to close 
+document.addEventListener('click', (e) => {
+  if (terminal.style.display === 'flex' && !terminal.contains(e.target) && e.target !== terminalLogo) {
+    closeTerminal();
+  }
+});
+
+//  Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (!introFinished) return; 
+
+  if (e.ctrlKey && e.key === '`') {
+    e.preventDefault();
+    openTerminal(false); 
+  }
+});
 
 //  Prompt for user input 
 function promptCommand() {
@@ -98,50 +134,63 @@ function promptCommand() {
 
     // Handle Enter key
     input.addEventListener('keydown', function handler(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const command = input.innerText.trim().toLowerCase();
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const command = input.innerText.trim().toLowerCase();
 
-            // Stop blinking
-            input.contentEditable = false;
-            input.classList.remove('active');
-            input.removeEventListener('keydown', handler);
-
-            if (validCommands.includes(command)) {
-                terminalText.innerHTML += `\nNavigating to ${command}...\n`;
-                closeTerminal();
-
-                // Scroll to section after terminal closes
-                setTimeout(() => {
-                    const section = document.getElementById(command);
-                    if (section) section.scrollIntoView({ behavior: 'smooth' });
-                }, 350);
-            } else {
-                terminalText.innerHTML += `\nCommand not found: ${command}\n`;
-                promptCommand(); // new line with blinking cursor
-            }
+        if(command === "") {
+            // If empty, do nothing and keep blinking cursor
+            return;
         }
-    });
-}
 
-// Close terminal 
-function closeTerminal() {
-  terminal.style.opacity = "0";
+        // Stop blinking
+        input.contentEditable = false;
+        input.classList.remove('active');
+        input.removeEventListener('keydown', handler);
 
-  setTimeout(() => {
-    terminal.style.display = "none";
+        if (validCommands.includes(command)) {
+            terminalText.innerHTML += `\nNavigating to ${command}...\n`;
+            closeTerminal();
 
-    portfolio.style.display = "block";
-    portfolio.offsetHeight; // reset animation
-    portfolio.classList.add("show");
-  }, 300);
-}
-
-
-// Click outside to close 
-document.addEventListener('click', (e) => {
-  if (terminal.style.display === 'flex' && !terminal.contains(e.target) && e.target !== terminalLogo) {
-    closeTerminal();
-  }
+            setTimeout(() => {
+                const section = document.getElementById(command);
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }, 350);
+        } else {
+            terminalText.innerHTML += `\nCommand not found: ${command}\n`;
+            promptCommand(); // new line with blinking cursor
+        }
+    }
 });
 
+}
+const navLinks = document.querySelectorAll('.nav-links a');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    // Remove active from all links
+    navLinks.forEach(l => l.classList.remove('active'));
+
+    // Add active to clicked link
+    link.classList.add('active');
+  });
+});
+
+
+const sections = document.querySelectorAll('section');
+
+window.addEventListener('scroll', () => {
+  let scrollPos = window.scrollY + window.innerHeight / 2;
+
+  sections.forEach(section => {
+    const top = section.offsetTop;
+    const bottom = top + section.offsetHeight;
+    const id = section.getAttribute('id');
+
+    if (scrollPos >= top && scrollPos < bottom) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+});
