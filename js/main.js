@@ -1,3 +1,4 @@
+// Terminal Intro Typing 
 const commands = [
   "> sudo ./portfolio\n",
   "Initializing portfolio...\n",
@@ -12,9 +13,10 @@ const terminalLogo = document.getElementById('terminal-logo');
 
 const validCommands = ['home','projects','skills','about','contact'];
 
-// Terminal Intro Typing 
+
 let i = 0;
 let j = 0;
+
 
 function typeCommand() {
   if (i < commands.length) {
@@ -29,18 +31,27 @@ function typeCommand() {
       setTimeout(typeCommand, 300);
     }
   } else {
-    // After intro, hide terminal and show portfolio
+  setTimeout(() => {
+    // fade terminal out
+    terminal.style.transition = "opacity 0.6s ease";
+    terminal.style.opacity = "0";
+
     setTimeout(() => {
-      terminal.style.opacity = "0";
-      setTimeout(() => {
-        terminal.style.display = "none";
-        portfolio.style.display = "block";
-        requestAnimationFrame(() => {
-          portfolio.style.opacity = "1";
-        });
-      }, 1000);
-    }, 800);
-  }
+      terminal.style.display = "none";
+
+      // prepare portfolio
+      portfolio.style.display = "block";
+
+      // force reflow so animation always runs
+      portfolio.offsetHeight;
+
+      // trigger smooth reveal
+      portfolio.classList.add("show");
+
+    }, 600);
+  }, 700);
+}
+
 }
 
 typeCommand();
@@ -49,15 +60,16 @@ typeCommand();
 terminalLogo.addEventListener('click', openTerminal);
 
 function openTerminal() {
-    // Clear terminal and show fresh input
-    terminalText.innerHTML = ""; 
-    terminal.style.display = "flex";
-    terminal.style.opacity = "1";
-    portfolio.style.display = "none";
+  terminalText.innerHTML = "";
+  terminal.style.display = "flex";
+  terminal.style.opacity = "1";
 
-    // Start first input line
-    promptCommand();
+  portfolio.classList.remove("show");
+  portfolio.style.display = "none";
+
+  promptCommand();
 }
+
 
 //  Prompt for user input 
 function promptCommand() {
@@ -114,15 +126,17 @@ function promptCommand() {
 
 // Close terminal 
 function closeTerminal() {
-    terminal.style.opacity = "0";
-    setTimeout(() => {
-        terminal.style.display = "none";
-        portfolio.style.display = "block";
-        requestAnimationFrame(() => {
-            portfolio.style.opacity = "1";
-        });
-    }, 300);
+  terminal.style.opacity = "0";
+
+  setTimeout(() => {
+    terminal.style.display = "none";
+
+    portfolio.style.display = "block";
+    portfolio.offsetHeight; // reset animation
+    portfolio.classList.add("show");
+  }, 300);
 }
+
 
 // Click outside to close 
 document.addEventListener('click', (e) => {
@@ -130,3 +144,4 @@ document.addEventListener('click', (e) => {
     closeTerminal();
   }
 });
+
